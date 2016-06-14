@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Vad har jag i kylen?</title>
+
+	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	<style type="text/css">
+	#header{
+		width: 100%;
+		background-color: dodgerblue;
+	}
+	body{
+		background-color: skyblue;
+		margin-left: 0.25em;
+	}
+	#fridge{
+		font-size: 1.5em;
+		border: 2px black solid;
+		display: inline-block;
+		border-radius: 5px;
+		padding: 4px;
+		margin-top: 0.25em;
+	}
+	.foodContainer{
+		background-color: rgba(255,255,255,0.6);
+		margin: 4px;
+		padding: 3px;
+		border: 1px gray solid;
+		border-radius: 5px;
+	}
+	img{
+		width: 1em;
+		float: right;
+		margin-left: 1em;
+	}
+	.foodDate{
+		float: right;
+		margin-left: 4em;
+	}
+	.shortDate{
+		background-color: rgba(255,255,0,0.5);
+	}
+	.superShortDate{
+		background-color: rgba(255,0,0,0.5);
+	}
+	
+	</style>
+</head>
+<body>
+	<div id="header">
+		<h1>Kylen</h1>
+	</div>
+	<form>
+		<input id="nameField" type="text" name="article">
+		<input id="dateField" type="date" name="month">
+		<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
+	</form>
+	<div id="fridge"></div>
+
+
+	
+	<script type="text/javascript">
+	var socket = io();
+	var fridge = $("#fridge");
+	socket.emit("fetchFood", true);
+	socket.on("deliverFood", function(fridgeList){
+		fridgeList.forEach(function(item){
+			fridge.append(itemToHTML(item));
+		})
+	})
+	var extractDate = function(){
+		var newItem = new FoodItem($("#nameField").val(), $("#dateField").val());
+		var htmlItem = itemToHTML(newItem);
+		fridge.append(htmlItem);
+		socket.emit("newItem", newItem);
+
+	}
+
+
+	var itemToHTML = function(item){
+		var htmlItem = $("<div>").addClass("foodContainer");
+		var foodName = $("<span>").addClass("foodName").text(item.name);
+		var foodDate = $("<span>").addClass("foodDate").text(item.date);
+		if(isSuperShortDate(item.date)){
+			htmlItem.addClass("superShortDate");
+		}else if(isShortDate(item.date)){
+			htmlItem.addClass("shortDate");
+		}
+		var closeButton = $('<img>',{class:'close',src:'close_icon.svg'});
+		closeButton.on("click", function(){
+			var article = $(this).parent();
+			socket.emit("removeItem", article.attr("index"));
+			$(this).parent().remove();
+		})
+		htmlItem.attr("index", item.index);
+		htmlItem.append(foodName);
+		htmlItem.append(closeButton);
+		htmlItem.append(foodDate);
+		htmlItem;
+		return htmlItem;
+	}
+
+	var isShortDate = function(date){
+		var dateObj = new Date(date);
+		return dateObj.getTime() - Date.now() < 1000*60*60*24*7;
+	}
+	var isSuperShortDate = function(date){
+		var dateObj = new Date(date);
+		return dateObj.getTime() - Date.now() < 1000*60*60*24;
+	}
+
+	function FoodItem(name, date){
+		this.name = name;
+		this.date = new Date(date).toDateString();
+		this.index = "" + Date.now();
+	}
+	</script>
+</body>
+</html>

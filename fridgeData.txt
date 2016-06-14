@@ -1,0 +1,5 @@
+name,date,index
+gurka,Wed Jun 22 2016,1465863439097
+tomat,Thu Jun 16 2016,1465863469622
+ananas,Wed Jun 15 2016,1465863477169
+sallad,Thu Jun 30 2016,1465863899455

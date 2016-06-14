@@ -1,0 +1,17 @@
+{
+  "name": "kylen",
+  "version": "1.0.0",
+  "description": "App for organizing what you have in your fridge",
+  "main": "index.js",
+  "dependencies": {
+    "papaparse": "^4.1.2",
+    "socket.io": "^1.4.6",
+    "socket.js": "^0.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aiman Josefsson",
+  "license": "ISC"
+}
