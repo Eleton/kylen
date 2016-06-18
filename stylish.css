@@ -1,0 +1,43 @@
+body {
+  background-color: #d2ffff;
+  margin-left: 0.25em; }
+
+#header {
+  text-align: center;
+  color: black;
+  font-size: 5em; }
+
+.fridge {
+  font-size: 1.5em;
+  color: black;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px black solid;
+  border-radius: 5px;
+  padding: 4px;
+  margin-top: 0.25em; }
+
+.foodContainer {
+  background-color: #cff;
+  margin: 4px;
+  padding: 3px;
+  border: 1px black solid;
+  border-radius: 5px; }
+  .foodContainer img {
+    width: 1em;
+    float: right;
+    margin-left: 0.5em; }
+  .foodContainer .foodDate {
+    float: right;
+    font-size: 0.8em; }
+
+.shortDate {
+  background-color: #a4ffd9; }
+
+.superShortDate {
+  background-color: #ff5;
+  font-weight: bold; }
+
+form input {
+  display: block; }
+
+/*# sourceMappingURL=stylish.css.map */
