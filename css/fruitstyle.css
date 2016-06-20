@@ -1,0 +1,83 @@
+body {
+  background-color: #e3e3b5;
+  background-image: url("vegetables.jpg");
+  margin-left: 0.25em;
+  background-repeat: no-repeat;
+  background-attachment: fixed; }
+
+#header {
+  text-align: center;
+  color: black; }
+  #header h1 {
+    font-size: 5em;
+    text-shadow: -3px -3px #fff;
+    font-family: "Times New Roman", Times, serif; }
+
+#whiteBackground {
+  background-color: white;
+  height: infinite;
+  border: 2px black solid;
+  border-top: 0px white solid;
+  border-radius: 0px 0px 20px 20px;
+  padding: 1vh 0vh 2vh 0vh; }
+
+.fridge {
+  font-size: 1.5em;
+  font-family: "times new roman";
+  color: black;
+  background-color: white;
+  border: 2px black solid;
+  border-radius: 10px;
+  padding: 4px;
+  margin-top: 0.25em; }
+  .fridge h2 {
+    color: black;
+    text-align: center; }
+
+input {
+  margin-left: 4px;
+  margin-bottom: 2px;
+  width: 98%;
+  border-radius: 5px; }
+
+form div {
+  display: flex;
+  justify-content: center; }
+
+button {
+  margin-left: 4px;
+  border-radius: 5px;
+  background-color: #00d700; }
+
+.foodContainer {
+  background-color: #00d700;
+  margin: 4px;
+  padding: 3px;
+  border: 1px black solid;
+  border-radius: 5px;
+  font-weight: bold; }
+  .foodContainer img {
+    width: 1em;
+    float: right;
+    margin-left: 0.5em; }
+  .foodContainer .foodDate {
+    float: right;
+    font-size: 0.8em; }
+    .foodContainer .foodDate :not(.superShortDate, .passedDate) {
+      font-weight: normal; }
+
+.shortDate {
+  background-color: gold; }
+
+.superShortDate {
+  background-color: #ff8917;
+  font-weight: bold; }
+
+.passedDate {
+  background-color: #b00;
+  font-weight: bold;
+  color: ivory;
+  text-shadow: 2px 2px #000; }
+
+form input {
+  display: block; }

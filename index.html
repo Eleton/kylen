@@ -11,39 +11,43 @@
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 	
-	<link rel="stylesheet" type="text/css" href="fruitstylish.css">
+	<link rel="stylesheet" type="text/css" href="css/fruitstyle.css">
 </head>
 <body>
-	<div id="header">
-		<h1>Bäst före</h1>
-	</div>
+	
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-4">
-				<div class="fridge">
-					<form>
-						<input id="nameFieldFridge" type="text" name="article">
-						<input id="dateFieldFridge" type="date" name="month">
-						<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
-					</form>
+			<div class="col-md-offset-1 col-md-10" id="whiteBackground">
+				<div id="header">
+					<h1>Bäst före</h1>
 				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="fridge">
-					<form>
-						<input id="nameFieldFreezer" type="text" name="article">
-						<input id="dateFieldFreezer" type="date" name="month">
-						<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
-					</form>
+				<div class="col-md-4">
+					<div class="fridge">
+						<h2>Kylen</h2>
+						<form>
+							<input id="nameFieldFridge" type="text" name="article" placeholder="Artikelnamn">
+							<input id="dateFieldFridge" type="date" name="month" placeholder="Bäst före-datum">
+							<div><button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button></div>
+						</form>
+					</div>
 				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="fridge">
-					<form>
-						<input id="nameField" type="text" name="article">
-						<input id="dateField" type="date" name="month">
-						<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
-					</form></div>
+				<div class="col-md-4">
+					<div class="fridge">
+						<form>
+							<input id="nameFieldFreezer" type="text" name="article">
+							<input id="dateFieldFreezer" type="date" name="month">
+							<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
+						</form>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="fridge">
+						<form>
+							<input id="nameField" type="text" name="article">
+							<input id="dateField" type="date" name="month">
+							<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
+						</form></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -72,7 +76,9 @@
 			var htmlItem = $("<div>").addClass("foodContainer");
 			var foodName = $("<span>").addClass("foodName").text(item.name);
 			var foodDate = $("<span>").addClass("foodDate").text(item.date);
-			if(isSuperShortDate(item.date)){
+			if(isPassedDate(item.date)){
+				htmlItem.addClass("passedDate");
+			}else if(isSuperShortDate(item.date)){
 				htmlItem.addClass("superShortDate");
 			}else if(isShortDate(item.date)){
 				htmlItem.addClass("shortDate");
@@ -89,6 +95,11 @@
 			htmlItem.append(foodDate);
 			htmlItem;
 			return htmlItem;
+		}
+		
+		var isPassedDate = function(date){
+			var dateObj = new Date(date);
+			return dateObj.getTime() - Date.now() < 1000*60*60*24*0;
 		}
 
 		var isShortDate = function(date){

@@ -1,12 +1,17 @@
 body {
+  background-color: ivory;
   background-image: url("vegetables.jpg");
-  background-color: #d2ffff;
   margin-left: 0.25em; }
 
 #header {
   text-align: center;
-  color: white;
-  font-size: 5em; }
+  color: black;
+  font-size: 7em; }
+
+#whiteBackground{
+  background-color: ivory;
+  height: 100px;
+}
 
 .fridge {
   font-size: 1.5em;
