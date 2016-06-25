@@ -22,31 +22,33 @@
 					<h1>Bäst före</h1>
 				</div>
 				<div class="col-md-4">
-					<div class="fridge">
+					<div class="storage" id="fridge">
 						<h2>Kylen</h2>
 						<form>
 							<input id="nameFieldFridge" type="text" name="article" placeholder="Artikelnamn">
 							<input id="dateFieldFridge" type="date" name="month" placeholder="Bäst före-datum">
-							<div><button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button></div>
+							<div><button type="button" onclick="extractDate('fridge')" name="submitArticle">Lägg in artikel</button></div>
 						</form>
 					</div>
 				</div>
 				<div class="col-md-4">
-					<div class="fridge">
+					<div class="storage" id="freezer">
+						<h2>Frysen</h2>
 						<form>
-							<input id="nameFieldFreezer" type="text" name="article">
-							<input id="dateFieldFreezer" type="date" name="month">
-							<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
+							<input id="nameFieldFreezer" type="text" name="article" placeholder="Artikelnamn">
+							<input id="dateFieldFreezer" type="date" name="month" placeholder="Bäst före-datum">
+							<div><button type="button" onclick="extractDate('freezer')" name="submitArticle">Lägg in artikel</button></div>
 						</form>
 					</div>
 				</div>
 				<div class="col-md-4">
-					<div class="fridge">
+					<div class="storage" id="pantry">
+						<h2>Skafferiet</h2>
 						<form>
-							<input id="nameField" type="text" name="article">
-							<input id="dateField" type="date" name="month">
-							<button type="button" onclick="extractDate()" name="submitArticle">Lägg in artikel</button>
-						</form></div>
+							<input id="nameFieldPantry" type="text" name="article" placeholder="Artikelnamn">
+							<input id="dateFieldPantry" type="date" name="month" placeholder="Bäst före-datum">
+							<div><button type="button" onclick="extractDate('pantry')" name="submitArticle">Lägg in artikel</button></div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -55,18 +57,54 @@
 
 
 		<script type="text/javascript">
+		parseDateToField("fridge");
+		parseDateToField("freezer");
+		parseDateToField("pantry");
+		/*var somedate = Date.now();
+		somedate = new Date(somedate);
+		console.log(somedate);
+		somedate = somedate.getFullYear() + "-" + ( "0" + (somedate.getMonth() + 1)) + "-" + somedate.getDate();
+		
+		document.getElementById('dateFieldFridge').value = somedate;
+		/*$(document).ready( function() {
+		    $('#dateFieldFridge').val(new Date().toDateInputValue());
+		});​*/
 		var socket = io();
-		var fridge = $(".fridge");
+		var fridge = $("#fridge");
+		var freezer = $("#freezer");
+		var pantry = $("#pantry");
 		socket.emit("fetchFood", true);
 		socket.on("deliverFood", function(fridgeList){
 			fridgeList.forEach(function(item){
-				fridge.append(itemToHTML(item));
+				var storage = $("#" + item.storage);
+				storage.append(itemToHTML(item));
 			})
 		})
-		var extractDate = function(){
-			var newItem = new FoodItem($("#nameFieldFridge").val(), $("#dateFieldFridge").val());
+		var extractDate = function(storage){
+			//storage = storage || "fridge";
+			var capitalStorage = storage[0].toUpperCase() + storage.slice(1);
+			var newItem = new FoodItem($("#nameField" + capitalStorage).val(), $("#dateField" + capitalStorage).val(), storage);
 			var htmlItem = itemToHTML(newItem);
-			fridge.append(htmlItem);
+			$("#" + storage).append(htmlItem);
+
+			/*switch(storage){
+				case "fridge":
+					newItem = new FoodItem($("#nameFieldFridge").val(), $("#dateFieldFridge").val(), storage);
+					var htmlItem = itemToHTML(newItem);
+					fridge.append(htmlItem);
+					break;
+				case "freezer":
+					newItem = new FoodItem($("#nameFieldFreezer").val(), $("#dateFieldFreezer").val(), storage);
+					var htmlItem = itemToHTML(newItem);
+					freezer.append(htmlItem);
+					break;
+				case "pantry":
+					newItem = new FoodItem($("#nameFieldPantry").val(), $("#dateFieldPantry").val(), storage);
+					var htmlItem = itemToHTML(newItem);
+					pantry.append(htmlItem);
+					break;
+			}*/
+			//fridge.append(htmlItem);
 			socket.emit("newItem", newItem);
 
 		}
@@ -86,10 +124,10 @@
 			var closeButton = $('<img>',{class:'close',src:'close_icon.svg'});
 			closeButton.on("click", function(){
 				var article = $(this).parent();
-				socket.emit("removeItem", article.attr("index"));
+				socket.emit("removeItem", article.attr("inputTime"));
 				$(this).parent().remove();
 			})
-			htmlItem.attr("index", item.index);
+			htmlItem.attr("inputTime", item.inputTime);
 			htmlItem.append(foodName);
 			htmlItem.append(closeButton);
 			htmlItem.append(foodDate);
@@ -111,10 +149,26 @@
 			return dateObj.getTime() - Date.now() < 1000*60*60*24;
 		}
 
-		function FoodItem(name, date){
+		function FoodItem(name, date, storage){
 			this.name = name;
 			this.date = new Date(date).toDateString();
-			this.index = "" + Date.now();
+			this.storage = storage || "fridge";
+			this.inputTime = "" + Date.now();
+		}
+		function parseDateToField(storage, dateInt){
+			storage = storage[0].toUpperCase() + storage.slice(1);
+			var store = $("#dateField" + storage);
+			var tempDate = Date.now();
+			tempDate = new Date(tempDate);
+			var d, m, y;
+			y = tempDate.getFullYear();
+			m = tempDate.getMonth() + 1;
+			m = m < 10 ? "0" + m : "" + m;
+			d = tempDate.getDate();
+			d = d < 10 ? "0" + d : "" + d;
+			var newDate = y + "-" + m + "-" + d;
+			console.log(newDate);
+			store.val(newDate);
 		}
 		</script>
 	</body>

@@ -7,6 +7,9 @@ let io = require("socket.io")(http);
 let fs = require("fs");
 let papa = require("papaparse");
 
+let mongo = require("mongodb").MongoClient;
+let url = "mongodb://localhost:27017/bestbefore";
+
 app.use(express.static(__dirname));
 
 app.get("/", (req, res) => {
@@ -41,6 +44,7 @@ fs.readFile('fridgeData.txt', 'utf8', function (err,data) {
 });
 
 
+
 fridgeList = [new FoodItem("mjölk", new Date(2016, 6, 17))
 , new FoodItem("lax", new Date(2016, 7, 3))
 , new FoodItem("skalbaggar", new Date(2017, 1, 26))];
@@ -48,18 +52,45 @@ fridgeList = [new FoodItem("mjölk", new Date(2016, 6, 17))
 
 io.on("connection", socket => {
 	socket.on("fetchFood", now => {
-		socket.emit("deliverFood", fridgeList);
+		mongo.connect(url, (err, db) => {
+			let collection = db.collection("products");
+			collection.find().toArray((err, documents) => {
+					if(err) throw err;
+					socket.emit("deliverFood", documents);
+					console.log(documents);
+					db.close();
+				});
+		})
 	})
 	socket.on("newItem", newItem => {
-		fridgeList.push(newItem);
+		console.log("here comes newItem:")
+		console.log(newItem);
+		/*fridgeList.push(newItem);
 		let csv = papa.unparse(fridgeList);
 		fs.writeFile('fridgeData.txt', csv, function (err) {
 		    if (err) 
 		        return console.log(err);
 		    console.log('Fridge saved');
-		});
+		});*/
+		mongo.connect(url, (err, db) => {
+			if (err) throw err;
+			let collection = db.collection("products");
+			collection.insert(newItem, (err, data) => {
+				if(err) throw err;
+				console.log(data);
+				db.close();
+			});
+		})
 	})
 	socket.on("removeItem", removableItem => {
+		mongo.connect(url, (err, db) => {
+			let collection = db.collection("products");
+			console.log(removableItem);
+			collection.remove({
+				//ändra till inputTime
+				inputTime: removableItem
+			})
+		})
 		var itemIndex = fridgeList
 			.map(item => item.index)
 			.indexOf(removableItem);

@@ -1,17 +1,18 @@
 $background-color: #e3e3b5;
-$fridge-color: rgba(255,255,255,1);
-$normal-article-color: rgba(0,215,0,1);
+$fridge-color: rgba(0,0,0,0.5);
+$normal-article-color: rgba(100,215,0,1);
 $short-article-color: rgba(255,215,0,1);
 $super-short-article-color: rgba(255,137,23,1);
 $passed-article-color: #b00;
 
 body{
+	/*background-color: $background-color;
+	/*background-image: url("FreshFoods_0.jpg");
+	/*background-repeat: no-repeat;*/
 	background-color: $background-color;
-	background-image: url("vegetables.jpg");
 	margin-left: 0.25em;
 	background-repeat: no-repeat;
     background-attachment: fixed;
-
 }
 #header{
 	text-align: center;
@@ -23,15 +24,14 @@ body{
 	}
 }
 #whiteBackground{
-	background-color: rgba(255,255,255,1);
+	background-color: rgba(255,255,255,0.2);
 	height: infinite;
 	border: 2px black solid;
 	border-top: 0px white solid;
 	border-radius: 0px 0px 20px 20px;
 	padding: 1vh 0vh 2vh 0vh;
-	
 }
-.fridge{
+.storage{
 	font-size: 1.5em;
 	font-family: "times new roman";
 	color: black;
@@ -59,9 +59,15 @@ form{
 	}
 }
 button{
+	margin-top: 2px;
 	margin-left: 4px;
 	border-radius: 5px;
 	background-color: $normal-article-color;
+	border-width: 8px;
+	border-left-color: #464;
+	border-top-color: #480;
+	border-right-color: #888;
+	border-bottom-color: #888; 
 }
 .foodContainer{
 	background-color: $normal-article-color;
